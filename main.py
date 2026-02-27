@@ -16,6 +16,12 @@ tasks = [
     # {"id": 2, "title": "Build AI API", "completed": False}
 ]
 
+
+@app.get("/")
+def home():
+    return {"message": "Task Manager API"}
+
+
 @app.post("/tasks")
 def create_task(task: TaskCreate):
     new_task = {
@@ -30,6 +36,15 @@ def create_task(task: TaskCreate):
 def get_tasks():
     return {"tasks": tasks}
 
+
+@app.get("/tasks/{task_id}")
+def get_task(task_id: int):
+    for task in tasks:
+        if task["id"] == task_id:
+            return task
+    return {"error": "Task not found"}
+
+
 @app.put("/tasks/{task_id}")
 def update_task(task_id: int, updated_task: TaskCreate):
     for task in tasks:
@@ -38,6 +53,7 @@ def update_task(task_id: int, updated_task: TaskCreate):
             task["completed"] = updated_task.completed
             return task
     return {"error": "Task not found"}
+
 
 @app.delete("/tasks/{task_id}")
 def delete_task(task_id: int):
@@ -49,16 +65,8 @@ def delete_task(task_id: int):
 
 
 
-@app.get("/")
-def home():
-    return {"message": "Task Manager API"}
 
-# @app.get("/tasks/{task_id}")
-# def get_task(task_id: int):
-#     for task in tasks:
-#         if task["id"] == task_id:
-#             return task
-#     return {"error": "Task not found"}
+
 
 # @app.get("/tasks/filter")
 # def filter_tasks(completed: bool):
